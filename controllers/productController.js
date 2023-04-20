@@ -20,4 +20,15 @@ const getProduct = asyncHandler(async (req,res) => {
 	res.status(200).json(product);
 });
 
+const updateProduct = asyncHandler(async (req,res) => {
+	const product = await Product.findById(req.params.id);
+	if(!product) {
+		res.status(404);
+		throw new Error("Product not found");
+	};
+
+	const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, {new:true});
+	res.status(200).json(updatedProduct);
+});
+
 module.exports = {getProducts, createProduct, getProduct, updateProduct, deleteProduct}
