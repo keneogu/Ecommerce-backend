@@ -11,4 +11,13 @@ const createProduct = asyncHandler(async (req,res) => {
 	res.status(201).json(product);
 })
 
-module.exports = {getProducts, createProduct}
+const getProduct = asyncHandler(async (req,res) => {
+	const product = await Product.findById(req.params.id);
+	if(!product) {
+		res.status(404);
+		throw new Error("Product not found");
+	}
+	res.status(200).json(product);
+});
+
+module.exports = {getProducts, createProduct, getProduct, updateProduct, deleteProduct}
