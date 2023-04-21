@@ -1,17 +1,19 @@
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const validator = require("validator");
+require("dotenv").config();
 
 const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please enter your name"],
-		trim: true,
+    trim: true,
     maxlength: [50, "Name is too long"],
   },
   email: {
     type: String,
     required: [true, "Enter your Email"],
-		trim: true,
+    trim: true,
     unique: [true, "Email already exists"],
     validate: [validator.isEmail, "Please enter a valid email address"],
   },
@@ -42,5 +44,11 @@ const userSchema = mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });
+
+userSchema.methods.getJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.SECRET_TOKEN, {
+    expiresIn: process.env.EXPIRE_TIME,
+  });
+};
 
 module.exports = mongoose.model("User", userSchema);
