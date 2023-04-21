@@ -28,7 +28,11 @@ const registerUser = asyncHandler( async(req,res) => {
 		}
 	});
 
-	res.status(201).json(user)
+	const token = user.getJwtToken()
+
+	res.status(201).json({
+		success: true, 
+		token});
 });
 
 module.exports = {registerUser}
