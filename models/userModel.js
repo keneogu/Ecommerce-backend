@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const userSchema = mongoose.Schema({
@@ -50,5 +51,9 @@ userSchema.methods.getJwtToken = function () {
     expiresIn: process.env.EXPIRE_TIME,
   });
 };
+
+userSchema.methods.comparePassword = async function (pass) {
+  return await bcrypt.compare(pass, this.password)
+}
 
 module.exports = mongoose.model("User", userSchema);
