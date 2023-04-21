@@ -16,7 +16,7 @@ app.get("/", (req,res) => {
 	res.send("Welcome to our online shop API...")
 })
 
-app.use("/api/v1/products", require("./routes/productRoutes"))
+app.use("/api/v1", require("./routes/productRoutes"))
 
 const port = process.env.PORT || 8080
 
