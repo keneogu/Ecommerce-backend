@@ -35,4 +35,29 @@ const registerUser = asyncHandler( async(req,res) => {
 		token});
 });
 
-module.exports = {registerUser}
+const loginUser = asyncHandler(async(req,res) => {
+	const {email,password} = req.body;
+	
+	if(!email || !password) {
+		res.status(400)
+		throw new Error("All fields are mandatory")
+	}
+	const user = await User.findOne({email}).select('+password');
+	if(!user) {
+		res.status(401)
+		throw new Error("email or password not valid")
+	}
+
+	const isPassword = await user.comparePassword(password)
+	if(!isPassword) {
+		res.status(401)
+		throw new Error("Incorrect Password")
+	}
+
+	const token = user.getJwtToken()
+
+	res.status(200).json({token});
+
+})
+
+module.exports = {registerUser, loginUser}
