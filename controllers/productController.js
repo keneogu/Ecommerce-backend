@@ -3,7 +3,10 @@ const Features = require("../features/features");
 const Product = require("../models/productModel");
 
 const getProducts = asyncHandler(async (req, res) => {
-  const features = new Features(Product.find(), req.query).search();
+
+  const perPage = 3;
+
+  const features = new Features(Product.find(), req.query).search().filter().pagination(perPage);
   const products = await features.query;
   res.status(200).json(products);
 });
