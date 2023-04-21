@@ -17,16 +17,18 @@ class Features {
     return this;
   };
 
-	filter = () => {
-		const queries = { ...this.queryStr };
+  filter = () => {
+    const queries = { ...this.queryStr };
 
-		const removeUndefinedQuery = ['search', 'limit', 'page']
-		removeUndefinedQuery.map(item => delete queries[item])
+    const removeUndefinedQuery = ["search", "limit", "page"];
+    removeUndefinedQuery.map((item) => delete queries[item]);
 
+    let queryStr = JSON.stringify(queries);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
 
-		this.query = this.query.find(queries);
-		return this;
-	}
+    this.query = this.query.find(JSON.parse(queryStr));
+    return this;
+  };
 }
 
 module.exports = Features;
