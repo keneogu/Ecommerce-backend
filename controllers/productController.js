@@ -5,10 +5,14 @@ const Product = require("../models/productModel");
 const getProducts = asyncHandler(async (req, res) => {
 
   const perPage = 3;
+  const productCount = await Product.countDocuments()
 
   const features = new Features(Product.find(), req.query).search().filter().pagination(perPage);
   const products = await features.query;
-  res.status(200).json(products);
+  res.status(200).json({
+    productCount,
+    products
+  });
 });
 
 const createProduct = asyncHandler(async (req, res) => {
