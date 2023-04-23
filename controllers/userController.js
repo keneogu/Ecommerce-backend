@@ -53,4 +53,15 @@ const loginUser = asyncHandler(async (req, res) => {
 	tokenHandler(user, 200, res);
 });
 
-module.exports = { registerUser, loginUser };
+const logoutUser = asyncHandler(async (req,res) => {
+  res.cookie('token', null , {
+    expires: new Date(Date.now()),
+    httpOnly: true
+  })
+
+  res.status(200).json({
+    message: 'User logged out'
+  })
+})
+
+module.exports = { registerUser, loginUser, logoutUser };
