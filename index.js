@@ -2,6 +2,7 @@ const express = require("express");
 const connectDb = require("./config/connectDb");
 const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
+const cookieParser = require('cookie-parser')
 require("dotenv").config();
 
 connectDb();
@@ -11,6 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(errorHandler);
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("Welcome to our online shop API...");
