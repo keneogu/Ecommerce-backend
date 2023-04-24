@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const tokenHandler = require("../middleware/tokenHandler");
 const sendEmail = require("../utils/sendEmail");
+const crypto = require("crypto");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -16,13 +17,13 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exist");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  console.log(hashedPassword);
+  // const hashedPassword = await bcrypt.hash(password, 10);
+  // console.log(hashedPassword);
 
   const user = await User.create({
     name,
     email,
-    password: hashedPassword,
+    password,
     avatar: {
       public_id: "Avatars/kene4_ryggsv",
       url: "https://res.cloudinary.com/keneogu/image/upload/v1682087314/Avatars/kene4_ryggsv.jpg",
@@ -93,7 +94,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
       message: `Email send to ${user.email}`,
     });
   } catch (error) {
-    user.resetPasswordToken = undefind;
+    user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
     await user.save({ validateBeforeSave: false });
@@ -102,4 +103,35 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword };
+const resetPassword = asyncHandler(async (req, res) => {
+  const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() }
+  });
+
+  if(!user) {
+    res.status(400);
+    throw new Error("Password has been expired");
+  }
+
+  if(req.body.password !== req.body.confirmPassword) {
+    res.status(400);
+    throw new Error("Password does not match");
+  }
+
+  user.password = req.body.password;
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  tokenHandler(user, 200, res)
+
+});
+
+
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword };
