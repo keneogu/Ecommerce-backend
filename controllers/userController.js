@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const tokenHandler = require("../middleware/tokenHandler");
+const sendEmail = require("../utils/sendEmail");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -50,18 +51,55 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Incorrect Password");
   }
 
-	tokenHandler(user, 200, res);
+  tokenHandler(user, 200, res);
 });
 
-const logoutUser = asyncHandler(async (req,res) => {
-  res.cookie('token', null , {
+const logoutUser = asyncHandler(async (req, res) => {
+  res.cookie("token", null, {
     expires: new Date(Date.now()),
-    httpOnly: true
-  })
+    httpOnly: true,
+  });
 
   res.status(200).json({
-    message: 'User logged out'
-  })
-})
+    message: "User logged out",
+  });
+});
 
-module.exports = { registerUser, loginUser, logoutUser };
+const forgotPassword = asyncHandler(async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User email not found");
+  }
+
+  const resetToken = user.passwordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/password/reset/${resetToken}`;
+
+  const message = `Your password reset token is : \n\n${resetUrl}\n\n if you did request for it ignore it.`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: "Password Recovery",
+      message,
+    });
+    res.status(200).json({
+      succes: true,
+      message: `Email send to ${user.email}`,
+    });
+  } catch (error) {
+    user.resetPasswordToken = undefind;
+    user.resetPasswordExpire = undefined;
+
+    await user.save({ validateBeforeSave: false });
+
+    return next(new Error(error.message, 500));
+  }
+});
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword };
