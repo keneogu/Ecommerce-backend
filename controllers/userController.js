@@ -214,4 +214,20 @@ const updateUser = asyncHandler(async(req,res) => {
   })
 });
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword, updateProfile, getAllUsers, getUserDetails, updateUser };
+const deleteUser = asyncHandler(async (req,res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error(`user id: ${req.params.id} not found`);
+  }
+
+  await user.deleteOne({ _id: req.params.id });
+
+  res.status(200).json({
+    success: true,
+  })
+
+});
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword, updateProfile, getAllUsers, getUserDetails, updateUser, deleteUser };
