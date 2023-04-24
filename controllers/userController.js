@@ -193,6 +193,25 @@ const getUserDetails = asyncHandler(async (req,res) => {
     user
   })
 
-})
+});
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword, updateProfile, getAllUsers, getUserDetails };
+const updateUser = asyncHandler(async(req,res) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role
+  }
+
+  const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false
+  })
+
+  res.status(200).json({
+    success: true,
+    user
+  })
+});
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword, updateProfile, getAllUsers, getUserDetails, updateUser };
