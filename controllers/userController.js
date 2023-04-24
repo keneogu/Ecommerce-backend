@@ -171,4 +171,28 @@ const logoutUser = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword, updateProfile };
+const getAllUsers = asyncHandler(async (req,res) => {
+  const users = await User.find();
+
+  res.status(200).json({
+    success: true,
+    users
+  })
+})
+
+const getUserDetails = asyncHandler(async (req,res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error(`user id: ${req.params.id} not found`);
+  }
+
+  res.status(200).json({
+    success: true,
+    user
+  })
+
+})
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword, updateProfile, getAllUsers, getUserDetails };
