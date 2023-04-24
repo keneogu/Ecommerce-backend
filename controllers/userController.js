@@ -55,17 +55,6 @@ const loginUser = asyncHandler(async (req, res) => {
   tokenHandler(user, 200, res);
 });
 
-const logoutUser = asyncHandler(async (req, res) => {
-  res.cookie("token", null, {
-    expires: new Date(Date.now()),
-    httpOnly: true,
-  });
-
-  res.status(200).json({
-    message: "User logged out",
-  });
-});
-
 const forgotPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
 
@@ -132,6 +121,20 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 });
 
+const updatePassword = asyncHandler(async(req,res) => {
+  const user = await User.findById(req.user.id).select('+password');
+
+  const isMatched = await user.comparePassword(req.body.oldPassword)
+  if(!isMatched) {
+    res.status(400);
+    throw new Error("Old password is incorrect");
+  }
+
+  user.password = req.body.password;
+  await user.save();
+  tokenHandler(user, 200, res)
+})
+
 const userProfile = asyncHandler(async (req,res) => {
   const user = await User.findById(req.user.id);
   res.status(200).json({
@@ -140,4 +143,15 @@ const userProfile = asyncHandler(async (req,res) => {
   })
 });
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile };
+const logoutUser = asyncHandler(async (req, res) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    message: "User logged out",
+  });
+});
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword };
