@@ -143,6 +143,23 @@ const userProfile = asyncHandler(async (req,res) => {
   })
 });
 
+const updateProfile = asyncHandler(async(req,res) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email
+  }
+
+  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+    new: true,
+    runValidators: false,
+    useFindAndModify: false
+  })
+
+  res.status(200).json({
+    success: true
+  })
+});
+
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),
@@ -154,4 +171,4 @@ const logoutUser = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword };
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile, updatePassword, updateProfile };
