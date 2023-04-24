@@ -132,6 +132,12 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 });
 
+const userProfile = asyncHandler(async (req,res) => {
+  const user = await User.findById(req.user.id);
+  res.status(200).json({
+    success: true,
+    user
+  })
+});
 
-
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword };
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, userProfile };
