@@ -22,4 +22,32 @@ const createCart = asyncHandler(async (req, res) => {
 	})
 });
 
-module.exports = {createCart};
+const getCart = asyncHandler(async (req,res) => {
+	const cart = await Cart.findById(req.params.id).populate('user', 'name email')
+
+	if(!cart) {
+		res.status(404);
+    throw new Error("No product in cart");
+	}
+
+	res.status(200).json({
+		succes: true,
+		cart
+	})
+});
+
+const myCart = asyncHandler(async (req,res) => {
+	const cart = await Cart.find({ user: req.user.id })
+
+	if(!cart) {
+		res.status(404);
+    throw new Error("No product in cart");
+	}
+
+	res.status(200).json({
+		succes: true,
+		cart
+	})
+})
+
+module.exports = {createCart, getCart, myCart};
