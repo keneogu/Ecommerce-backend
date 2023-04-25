@@ -1,5 +1,5 @@
 const express = require('express');
-const { createCart, getCart, myCart, getAllCarts } = require('../controllers/cartController');
+const { createCart, getCart, myCart, getAllCarts, updateCart } = require('../controllers/cartController');
 const router = express.Router();
 
 const {authenticateUser} = require("../middleware/authenticate");
@@ -9,3 +9,4 @@ router.route('/order/new').post(authenticateUser, createCart);
 router.route('/order/:id').get(authenticateUser, getCart);
 router.route('/order/me').get(authenticateUser, myCart);
 router.route('/admin/orders/').get(authenticateUser, authorize('admin'), getAllCarts);
+router.route('/admin/order/:id').get(authenticateUser, authorize('admin'), updateCart);

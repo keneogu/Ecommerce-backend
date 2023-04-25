@@ -66,4 +66,33 @@ const getAllCarts = asyncHandler(async (req,res) => {
 	})
 });
 
-module.exports = {createCart, getCart, myCart, getAllCarts};
+const updateCart = asyncHandler(async (req,res) => {
+	const cart = await Cart.findById(req.params.id);
+
+	if(cart.orderStatus === 'Delivered') {
+		res.status(400);
+    throw new Error("the products have been delivered");
+	}
+
+	cart.orderedItems.forEach(async item => {
+		await updateStock(item.product, item.quantity)
+	})
+
+	cart.orderStatus = req.body.status,
+	cart.deliveredAt = Date.now()
+
+	await cart.save()
+
+	res.status(200).json({
+		success: true
+	})
+})
+
+async function updateStock(id, quantity) {
+	const product = await Product.findById(id);
+	product.stock = product.stock - quantity;
+
+	await product.save({ validateBeforeSave: false })
+}
+
+module.exports = {createCart, getCart, myCart, getAllCarts, updateCart};
