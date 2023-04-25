@@ -48,6 +48,22 @@ const myCart = asyncHandler(async (req,res) => {
 		succes: true,
 		cart
 	})
-})
+});
 
-module.exports = {createCart, getCart, myCart};
+const getAllCarts = asyncHandler(async (req,res) => {
+	const carts = await Cart.find()
+
+	let totalAmount = 0;
+
+	carts.forEach(cart => {
+		totalAmount += cart.totalPrice
+	})
+
+	res.status(200).json({
+		succes: true,
+		totalAmount,
+		carts
+	})
+});
+
+module.exports = {createCart, getCart, myCart, getAllCarts};
