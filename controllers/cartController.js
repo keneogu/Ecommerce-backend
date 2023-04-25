@@ -1,5 +1,6 @@
 const Cart = require("../models/cartModel");
 const asyncHandler = require("express-async-handler");
+const Product = require("../models/productModel");
 
 
 const createCart = asyncHandler(async (req, res) => {
@@ -95,4 +96,15 @@ async function updateStock(id, quantity) {
 	await product.save({ validateBeforeSave: false })
 }
 
-module.exports = {createCart, getCart, myCart, getAllCarts, updateCart};
+const deleteCart = asyncHandler(async (req, res) => {
+  const cart = await Cart.findById(req.params.id);
+  if (!cart) {
+    res.status(404);
+    throw new Error("Cart not found");
+  }
+
+  await cart.remove();
+  res.status(200).json(product);
+});
+
+module.exports = {createCart, getCart, myCart, getAllCarts, updateCart, deleteCart};
