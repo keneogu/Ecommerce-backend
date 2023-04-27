@@ -104,7 +104,7 @@ const deleteCart = asyncHandler(async (req, res) => {
   }
 
   await cart.remove();
-  res.status(200).json(product);
+  res.status(200).json(cart);
 });
 
 module.exports = {createCart, getCart, myCart, getAllCarts, updateCart, deleteCart};
