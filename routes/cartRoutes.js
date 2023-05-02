@@ -12,3 +12,5 @@ router.route('/admin/orders/').get(authenticateUser, authorize('admin'), getAllC
 router.route('/admin/order/:id')
 						.put(authenticateUser, authorize('admin'), updateCart)
 						.delete(authenticateUser, authorize('admin'), deleteCart);
+
+module.exports = router;
