@@ -4,8 +4,15 @@ const bcrypt = require("bcrypt");
 const tokenHandler = require("../middleware/tokenHandler");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const cloudinary = require("cloudinary")
 
 const registerUser = asyncHandler(async (req, res) => {
+
+  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: 'Avatars',
+    width: 150,
+    crop: "scale"
+  })
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
     res.status(400);
@@ -25,8 +32,8 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     avatar: {
-      public_id: "Avatars/kene4_ryggsv",
-      url: "https://res.cloudinary.com/keneogu/image/upload/v1682087314/Avatars/kene4_ryggsv.jpg",
+      public_id: result.public_id,
+      url: result.secure_url,
     },
   });
 
