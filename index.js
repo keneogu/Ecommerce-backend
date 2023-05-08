@@ -3,6 +3,9 @@ const connectDb = require("./config/connectDb");
 const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require('cookie-parser')
+const bodyparser = require('body-parser')
+const cloudinary = require('cloudinary')
+
 require("dotenv").config();
 
 connectDb();
@@ -10,9 +13,16 @@ connectDb();
 const app = express();
 
 app.use(express.json());
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(errorHandler);
 app.use(cookieParser());
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API,
+  api_secret: process.env.CLOUDINARY_SECRET
+})
 
 app.get("/", (req, res) => {
   res.send("Welcome to our online shop API...");
