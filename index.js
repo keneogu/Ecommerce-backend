@@ -5,6 +5,7 @@ const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require('cookie-parser')
 const bodyparser = require('body-parser')
 const cloudinary = require('cloudinary')
+const fileupload = require("express-fileupload")
 
 require("dotenv").config();
 
@@ -17,6 +18,7 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(errorHandler);
 app.use(cookieParser());
+app.use(fileupload())
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
