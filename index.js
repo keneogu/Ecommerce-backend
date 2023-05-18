@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1", require("./routes/productRoutes"));
 app.use("/api/v1", require("./routes/userRoutes"));
 app.use("/api/v1", require("./routes/cartRoutes"));
+app.use("/api/v1", require("./routes/paymentRoutes"));
 
 const port = process.env.PORT || 8080;
 
