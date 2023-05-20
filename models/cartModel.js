@@ -26,7 +26,7 @@ const cartSchema = mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
-		ref: 'user'
+		ref: 'User'
 	},
 	orderedItems: [
 		{
@@ -49,7 +49,7 @@ const cartSchema = mongoose.Schema({
 			product: {
 				type: mongoose.Schema.Types.ObjectId,
 				required: true,
-				ref: 'product'
+				ref: 'Product'
 			},
 		}
 	],
@@ -87,7 +87,7 @@ const cartSchema = mongoose.Schema({
 	orderStatus: {
 		type: String,
 		required: true,
-		default: 'Processing...'
+		default: 'Processing'
 	},
 	deliveredAt: {
 		type: Date
