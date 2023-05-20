@@ -18,7 +18,7 @@ const createCart = asyncHandler(async (req, res) => {
 		user: req.user._id
 	})
 	res.status(200).json({
-		success,
+		success: true,
 		cart
 	})
 });
@@ -32,7 +32,7 @@ const getCart = asyncHandler(async (req,res) => {
 	}
 
 	res.status(200).json({
-		succes: true,
+		success: true,
 		cart
 	})
 });
@@ -46,7 +46,7 @@ const myCart = asyncHandler(async (req,res) => {
 	}
 
 	res.status(200).json({
-		succes: true,
+		success: true,
 		cart
 	})
 });
@@ -61,7 +61,7 @@ const getAllCarts = asyncHandler(async (req,res) => {
 	})
 
 	res.status(200).json({
-		succes: true,
+		success: true,
 		totalAmount,
 		carts
 	})
