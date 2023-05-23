@@ -46,7 +46,7 @@ const myCart = asyncHandler(async (req,res) => {
 	}
 
 	res.status(200).json({
-		success: true,
+		status: "success",
 		cart
 	})
 });

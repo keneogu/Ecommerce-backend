@@ -7,7 +7,7 @@ const { authorize } = require('../middleware/authorize');
 
 router.route('/order/new').post(authenticateUser, createCart);
 router.route('/order/:id').get(authenticateUser, getCart);
-router.route('/order/me').get(authenticateUser, myCart);
+router.route('/orders/me').get(authenticateUser, myCart);
 router.route('/admin/orders/').get(authenticateUser, authorize('admin'), getAllCarts);
 router.route('/admin/order/:id')
 						.put(authenticateUser, authorize('admin'), updateCart)
