@@ -4,15 +4,16 @@ const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require('cookie-parser')
 const bodyparser = require('body-parser')
-const cloudinary = require('cloudinary')
-const fileupload = require("express-fileupload")
+const cloudinary = require('cloudinary');
+const fileupload = require("express-fileupload");
+var morgan = require('morgan');
 
 require("dotenv").config();
 
 connectDb();
 
 const app = express();
-
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
