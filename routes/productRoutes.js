@@ -16,7 +16,7 @@ const { authorize } = require('../middleware/authorize');
 const router = express.Router();
 
 router.route("/products").get(getProducts);
-router.route("/admin/products/new").post(authenticateUser, authorize('admin'), createProduct);
+router.route("/admin/product/new").post(authenticateUser, authorize('admin'), createProduct);
 router.route("/product/:id").get(getProduct);
 router.route("/admin/products").get(getAdminProducts);
 router.route("/admin/product/:id").put(authenticateUser, authorize('admin'), updateProduct).delete(authenticateUser, authorize('admin'), deleteProduct);
