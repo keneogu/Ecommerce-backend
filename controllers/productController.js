@@ -98,8 +98,16 @@ const deleteProduct = asyncHandler(async (req, res) => {
     throw new Error("Product not found");
   }
 
-  await Product.remove();
-  res.status(200).json(product);
+  for (let i = 0; i < product.images.length; i++) {
+    const result = await cloudinary.v2.uploader.destroy(product.images[i].public_id)
+  }
+
+  await product.deleteOne();
+  
+  res.status(200).json({
+    success: true,
+    message: "Product is deleted"
+  });
 });
 
 const createReview = asyncHandler(async(req,res) => {
