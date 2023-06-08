@@ -178,7 +178,7 @@ const createReview = asyncHandler(async (req, res) => {
     product.reviews.reduce((acc, item) => item.rating + acc, 0) /
     product.reviews.length;
 
-  await product.save({ validateBeforeSvae: false });
+  await product.save({ validateBeforeSave: false });
 
   res.status(200).json({
     success: true,
