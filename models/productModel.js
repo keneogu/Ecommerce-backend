@@ -1,5 +1,30 @@
 const mongoose = require("mongoose");
 
+const reviewSchema = mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    rating: {
+      type: Number,
+      required: true,
+    },
+    comment: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 const productSchema = mongoose.Schema(
   {
     user: {
@@ -42,7 +67,7 @@ const productSchema = mongoose.Schema(
           "Electronics",
           "Accessories",
           "Beverages",
-          'Food/Fruit',
+          "Food/Fruit",
           "Fashion",
           "Cosmetics",
           "Phones-tablets",
@@ -64,27 +89,7 @@ const productSchema = mongoose.Schema(
       maxlength: [10, "Product stocked cannot exceed 10"],
       default: 0,
     },
-    reviews: [
-      {
-        user: {
-          type: mongoose.Schema.ObjectId,
-          required: true,
-          ref: "User",
-        },
-        name: {
-          type: String,
-          required: true,
-        },
-        rating: {
-          type: Number,
-          required: true,
-        },
-        comment: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    reviews: [reviewSchema],
     numOfReviews: {
       type: Number,
       default: 0,
