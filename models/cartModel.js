@@ -24,34 +24,36 @@ const orderedItemsSchema = mongoose.Schema({
   },
 });
 
+const shippingInfoSchema = mongoose.Schema({
+	address: {
+		type: String,
+		required: true,
+	},
+	city: {
+		type: String,
+		required: true,
+	},
+	phoneNo: {
+		type: String,
+		required: true,
+	},
+	postalCode: {
+		type: String,
+		required: true,
+	},
+	country: {
+		type: String,
+		required: true,
+	},
+});
+
 const cartSchema = mongoose.Schema({
-  shippingInfo: {
-    address: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    phoneNo: {
-      type: String,
-      required: true,
-    },
-    postalCode: {
-      type: String,
-      required: true,
-    },
-    country: {
-      type: String,
-      required: true,
-    },
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "User",
   },
+	shippingInfo: shippingInfoSchema,
   orderedItems: [orderedItemsSchema],
   paymentInfo: {
     id: {
