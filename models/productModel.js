@@ -78,6 +78,7 @@ const productSchema = mongoose.Schema(
           "Sports",
         ],
       },
+      message: '{VALUE} is not supported'
     },
     ratings: {
       type: Number,
