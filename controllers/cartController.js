@@ -28,7 +28,7 @@ const getCart = asyncHandler(async (req,res) => {
 
 	if(!cart) {
 		res.status(404);
-    throw new Error("No product in cart");
+    throw new Error("No order found in this cart");
 	}
 
 	res.status(200).json({
