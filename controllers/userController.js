@@ -1,6 +1,5 @@
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcrypt");
 const tokenHandler = require("../middleware/tokenHandler");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
@@ -8,12 +7,8 @@ const cloudinary = require("cloudinary")
 
 const registerUser = asyncHandler(async (req, res) => {
 
-  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
-    folder: 'Avatars',
-    width: 150,
-    crop: "scale"
-  })
   const { name, email, password } = req.body;
+
   if (!name || !email || !password) {
     res.status(400);
     throw new Error("All fields are mandatory");
@@ -24,8 +19,12 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exist");
   }
 
-  // const hashedPassword = await bcrypt.hash(password, 10);
-  // console.log(hashedPassword);
+  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: 'Avatars',
+    width: 150,
+    crop: "scale"
+  })
+
 
   const user = await User.create({
     name,
